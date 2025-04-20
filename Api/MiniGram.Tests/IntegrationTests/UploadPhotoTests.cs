@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using MiniGram.Api;
 using MiniGram.Api.Common;
 using MiniGram.Api.Handlers;
 using MiniGram.Api.Storage.Entities;
@@ -13,7 +14,7 @@ using Xunit;
 
 namespace MiniGram.Tests.IntegrationTests;
 
-public class UploadImageTests: IDisposable
+public class UploadPhotoTests: IDisposable
 {
     readonly WebApplicationFactory<Program> _app;
     readonly ClientTestWebAppFactory _factory = new();
@@ -21,7 +22,7 @@ public class UploadImageTests: IDisposable
     readonly IMiniGramClient _client;
     readonly Mock<ICurrentRequest> _currentRequest = new();
     
-    public UploadImageTests()
+    public UploadPhotoTests()
     {
         _currentRequest.Setup(x => x.UserId).Returns(TestHelper.GetTestUserId);
         _client = _factory.WithWebHostBuilder(builder =>

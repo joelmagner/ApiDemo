@@ -33,15 +33,17 @@ public class CommentPhotoHandler(MiniGramContext context, IValidator validator, 
         
         var comment = new Comment
         {
+            UserId = currentRequest.UserId,
             PhotoId = request.PhotoId,
             Text = request.Comment,
             Created = DateTime.UtcNow,
-            UserId = currentRequest.UserId
         };
-     
-        // context.Comments.Add(comment);
+
+
+        context.Comments.Add(comment);
         await context.SaveChangesAsync(cancellationToken);
-        return Results.Created($"/photos/{request.PhotoId}/comments/{comment.PhotoId}", comment);
+        
+        return Results.Ok();
     }
     
     IValidator ValidateRequest(CommentPhotoRequest request)

@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MiniGram.Api;
 using MiniGram.Api.Configuration;
 using MiniGram.Api.Storage;
 using MiniGram.Api.Storage.Entities;
 using Moq;
 
-namespace MiniGram.Tests.IntegrationTests;
+namespace MiniGram.Tests;
 
 public class ClientTestWebAppFactory : WebApplicationFactory<Program>
 {
@@ -66,7 +67,6 @@ public class ClientTestWebAppFactory : WebApplicationFactory<Program>
    
 }
 
-
 public class MiniGramMemoryDb
 {
     const string ConnectionString = "DataSource=:memory:";
@@ -100,11 +100,10 @@ public class MiniGramMemoryDb
         var photo = new Photo
         {
             Id = TestHelper.GetTestPhotoId,
-            UserId = user.UserId,
+            UserId = TestHelper.GetTestUserId,
             Description = "test",
             ContentType = "image/jpeg",
             Contents = [1, 2, 3, 4],
-            User = user
         };
         
         dbContext.Users.Add(user);
@@ -112,7 +111,6 @@ public class MiniGramMemoryDb
         dbContext.SaveChanges();
     }
 }
-
 
 public static class WebApplicationFactoryExtensions
 {

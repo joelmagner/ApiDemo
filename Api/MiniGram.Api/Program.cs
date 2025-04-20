@@ -51,4 +51,7 @@ finally
 }
 
 
-public partial class Program { /* for testing */ }
+namespace MiniGram.Api
+{
+    public partial class Program { /* for testing */ }
+}

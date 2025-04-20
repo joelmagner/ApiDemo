@@ -30,6 +30,7 @@ public static class RouteExtensions
                 await handler.Handle(request, cancellationToken))
             .WithDescription("Not yet implemented")
             .Produces<Ok>()
+            .Produces<UnauthorizedResult>(StatusCodes.Status401Unauthorized)
             .Produces<BadRequest>(StatusCodes.Status400BadRequest);
     }
 
@@ -47,26 +48,29 @@ public static class RouteExtensions
                     CancellationToken cancellationToken) =>
                 await handler.Handle(request, cancellationToken))
             .Produces<Ok>()
+            .Produces<UnauthorizedResult>(StatusCodes.Status401Unauthorized)
             .Produces<BadRequest>(StatusCodes.Status400BadRequest);
     }
 
     static void UploadRoutes(this RouteGroupBuilder route)
     {
-        route.MapPost("/photo",
+        route.MapPost("/photo", // [Authorize] TODO: Kika på testerna. Behöver sätta upp auth-mockar på claimsen
                 async ([FromBody] UploadPhotoRequest request, IUploadPhotoHandler handler,
                         CancellationToken cancellationToken) =>
                     await handler.Handle(request, cancellationToken))
             .Produces<Ok>()
+            .Produces<UnauthorizedResult>(StatusCodes.Status401Unauthorized)
             .Produces<BadRequest>(StatusCodes.Status400BadRequest);
     }
 
     static void InteractionRoutes(this RouteGroupBuilder route)
     {
-        route.MapPost("/comment",
+        route.MapPost("/comment", // [Authorize]
                 async ([FromBody] CommentPhotoRequest request, ICommentPhotoHandler handler,
                         CancellationToken cancellationToken) =>
                     await handler.Handle(request, cancellationToken))
             .Produces<Ok>()
+            .Produces<UnauthorizedResult>(StatusCodes.Status401Unauthorized)
             .Produces<BadRequest>(StatusCodes.Status400BadRequest);
     }
 }

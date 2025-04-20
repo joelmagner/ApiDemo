@@ -14,7 +14,7 @@ public interface IMiniGramClient
     Task<Response<User>> CreateUser(CreateUserRequest request, CancellationToken cancellationToken = default);
     Task<Response<User>> GetUserByUsername(GetUserByUsernameRequest request, CancellationToken cancellationToken = default);
     Task<Response<Photo>> UploadPhoto(UploadPhotoRequest request, CancellationToken cancellationToken = default);
-    Task<Response<Comment>> CommentPhoto(CommentPhotoRequest request, CancellationToken cancellationToken = default);
+    Task<Response> CommentPhoto(CommentPhotoRequest request, CancellationToken cancellationToken = default);
 }
 
 
@@ -52,9 +52,9 @@ public class MiniGramClient(HttpClient client) : IMiniGramClient
         return await response.ToClientItemResponse<Photo>(cancellationToken);
     }
     
-    public async Task<Response<Comment>> CommentPhoto(CommentPhotoRequest request, CancellationToken cancellationToken = default)
+    public async Task<Response> CommentPhoto(CommentPhotoRequest request, CancellationToken cancellationToken = default)
     {
         var response = await client.PostAsJsonAsync("/interaction/comment", request, _options, cancellationToken);
-        return await response.ToClientItemResponse<Comment>(cancellationToken);
+        return await response.ToClientItemResponse(cancellationToken);
     }
 }
