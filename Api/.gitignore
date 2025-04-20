@@ -1,0 +1,106 @@
+# User-specific files
+.DS_Store
+.vs/
+.idea/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files
+Thumbs.db
+ehthumbs.db
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ebug-x64/
+[Dd]ebug-x86/
+[Dd]ebug_arm/
+[Dd]ebug_AnyCPU/
+[Dd]ebug-AnyCPU/
+[Dd]Release/
+[Dd]Release-x64/
+[Dd]Release-x86/
+[Dd]Release_arm/
+[Dd]Release_AnyCPU/
+[Dd]Release-AnyCPU/
+x64/
+x86/
+arm/
+publish/
+
+# Windows installer folder
+bin/
+obj/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET 5.0+
+.vs2019/
+.vs2017/
+
+# JetBrains Rider
+.idea/
+
+# User-specific files for Visual Studio for Mac
+.vscode/
+
+# Windows Installer Files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Npm packages
+node_modules/
+
+# npm log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Microsoft Azure Web App publish folder
+wwwroot/
+
+# User-generated data in app data
+app_data/
+
+# Docker files
+docker-compose.override.yml
+Dockerfile.*
+
+# .NET Core Tooling
+global.json
+
+# .NET Core Build directories
+.vscode/
+.vs/
+.idea/
+
+# NuGet
+.nuget/
+
+# IntelliJ IDEA
+.idea/
+
+# Backup files
+*~
+*.bak
+*.tmp
+
+# Rider/JetBrains
+.idea/
