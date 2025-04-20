@@ -4,4 +4,3 @@ public class LogoutRequest
 {
     public string? AccessToken { get; set; }
 }
- 

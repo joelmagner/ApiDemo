@@ -10,7 +10,7 @@ public class Comment
     public DateTime? Updated { get; set; }
     public Guid UserId { get; set; }
     public bool IsDeleted { get; set; }
-    
+
     // Navigation properties
     public User User { get; set; }
     public Photo Photo { get; set; }

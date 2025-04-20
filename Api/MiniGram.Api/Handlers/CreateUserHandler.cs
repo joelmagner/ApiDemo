@@ -19,7 +19,6 @@ public class CreateUserHandler(
 {
     public async Task<IResult> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-     
         var validation = ValidateRequest(request);
         if (!validation.IsValid)
             return Results.ValidationProblem(validation.Errors);
@@ -47,7 +46,7 @@ public class CreateUserHandler(
             Created = DateTime.UtcNow,
             Updated = null
         };
-        
+
         var credentials = new Credentials
         {
             UserId = userId,
@@ -66,12 +65,13 @@ public class CreateUserHandler(
     {
         validate.Validate(request);
         validate.Check(request.UserName, nameof(request.UserName), $"{nameof(request.UserName)} is required.");
-        validate.Check(request.FirstName, nameof(request.FirstName), $"{nameof(request.FirstName)} must be at least 2 characters.", s => s.Length >= 2);
-        validate.Check(request.LastName, nameof(request.LastName), $"{nameof(request.LastName)} must be at least 2 characters.", s => s.Length >= 2);
-        validate.Check(request.Password, nameof(request.Password), $"{nameof(request.Password)} must be at least 6 characters.", s => s.Length >= 6);
+        validate.Check(request.FirstName, nameof(request.FirstName),
+            $"{nameof(request.FirstName)} must be at least 2 characters.", s => s.Length >= 2);
+        validate.Check(request.LastName, nameof(request.LastName),
+            $"{nameof(request.LastName)} must be at least 2 characters.", s => s.Length >= 2);
+        validate.Check(request.Password, nameof(request.Password),
+            $"{nameof(request.Password)} must be at least 6 characters.", s => s.Length >= 6);
         validate.Check(request.Email, nameof(request.Email), "Email must be valid.", s => s.Contains('@'));
         return validate;
     }
-    
-   
 }

@@ -53,4 +53,5 @@ public class CommentPhotoHandler(MiniGramContext context, IValidator validator, 
         validator.Check(request.Comment, nameof(request.Comment), $"{nameof(request.Comment)} is too long.", s => s.Length <= 500);
         return validator;
     }
+    
 }

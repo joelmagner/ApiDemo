@@ -7,20 +7,18 @@ namespace MiniGram.Api.Configuration;
 
 public class JwtConfig
 {
-    public string Key { get; set; } 
-    public string Issuer { get; set; } 
-    public string Audience { get; set; } 
+    public string Key { get; set; }
+    public string Issuer { get; set; }
+    public string Audience { get; set; }
     public int ExpiresInMinutes { get; set; }
-};
-
+}
 
 public interface IJwtService
 {
     string GenerateToken(Guid userId, string email, string username, string firstName, string lastName);
 }
 
-
-public class JwtService(JwtConfig? config): IJwtService
+public class JwtService(JwtConfig? config) : IJwtService
 {
     public string GenerateToken(Guid userId, string email, string username, string firstName, string lastName)
     {
@@ -41,9 +39,9 @@ public class JwtService(JwtConfig? config): IJwtService
         );
 
         var token = new JwtSecurityToken(
-            issuer: config.Issuer,
-            audience: config.Audience,
-            claims: claims,
+            config.Issuer,
+            config.Audience,
+            claims,
             expires: DateTime.UtcNow.AddMinutes(config.ExpiresInMinutes),
             signingCredentials: creds
         );

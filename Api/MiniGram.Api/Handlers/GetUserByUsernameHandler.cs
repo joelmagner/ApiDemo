@@ -21,7 +21,6 @@ public class GetUserByUsernameHandler(MiniGramContext context)
         {
             return Results.NotFound($"No user with {request.Username} could be found");
         }
-
         return Results.Ok(user);
     }
 }

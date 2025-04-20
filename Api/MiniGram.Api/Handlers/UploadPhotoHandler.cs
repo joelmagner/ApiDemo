@@ -23,10 +23,7 @@ public class UploadPhotoHandler(MiniGramContext context, ICurrentRequest current
     public async Task<IResult> Handle(UploadPhotoRequest request, CancellationToken cancellationToken = default)
     {
         var validation = ValidateRequest(request);
-        if (!validation.IsValid)
-        {
-            return Results.ValidationProblem(validation.Errors);
-        }
+        if (!validation.IsValid) return Results.ValidationProblem(validation.Errors);
 
         var photo = new Photo
         {
@@ -45,8 +42,10 @@ public class UploadPhotoHandler(MiniGramContext context, ICurrentRequest current
     IValidator ValidateRequest(UploadPhotoRequest request)
     {
         validator.Validate(request);
-        validator.Check(request.Description, nameof(request.Description), $"{nameof(request.Description)} is required or too long.", s => s.Length == 0 || s.Length < 500);
-        validator.Check(request.Contents, nameof(request.Contents), $"{nameof(request.Contents)} is too large.", s => s?.Length <= 1024 * 1024 * 5); // 5mb
+        validator.Check(request.Description, nameof(request.Description),
+            $"{nameof(request.Description)} is required or too long.", s => s.Length == 0 || s.Length < 500);
+        validator.Check(request.Contents, nameof(request.Contents), $"{nameof(request.Contents)} is too large.",
+            s => s?.Length <= 1024 * 1024 * 5); // 5mb
         return validator;
     }
 }
