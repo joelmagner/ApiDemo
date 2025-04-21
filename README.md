@@ -13,8 +13,8 @@ Example Api to demonstrate EF, .NET, Auth etc. TBD... what exactly this is gonna
 - login flow
 - file upload
 - integration tests
-- Authorize\* (it is working, disabled becuase of tests more important)
-- Client package, probably needs a rework with the types
+- Authorize\* (it is working, disabled because I needed to do some tests)
+- Client package, probably needs a rework with the return Response types
 
 # Setup
 
@@ -39,3 +39,7 @@ or start the frontend with:
 GIF demo:
 
 ![](./demo.gif)
+
+Register:
+
+![](./register.gif)
