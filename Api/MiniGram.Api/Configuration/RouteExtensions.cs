@@ -25,6 +25,12 @@ public static class RouteExtensions
             .Produces<Ok>()
             .Produces<BadRequest>(StatusCodes.Status400BadRequest);
 
+        route.MapGet("/me",
+                async (IMeHandler handler, CancellationToken cancellationToken) =>
+                    await handler.Handle(cancellationToken))
+            .Produces<Ok>()
+            .Produces<BadRequest>(StatusCodes.Status400BadRequest);
+
         route.MapPost("/logout", [Authorize]
                 async ([FromBody] LogoutRequest request, ILogoutHandler handler, CancellationToken cancellationToken) =>
                 await handler.Handle(request, cancellationToken))

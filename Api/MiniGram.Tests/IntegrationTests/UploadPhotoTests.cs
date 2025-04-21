@@ -52,7 +52,7 @@ public class UploadPhotoTests : IDisposable
         var fileContents = await File.ReadAllBytesAsync(imagePath);
         var request = new UploadPhotoRequest
         {
-            Contents = fileContents,
+            Contents = fileContents.ToList(),
             ContentType = "image/jpeg",
             Description = "test"
         };
@@ -82,7 +82,7 @@ public class UploadPhotoTests : IDisposable
         var fileContents = await File.ReadAllBytesAsync(imagePath);
         var request = new UploadPhotoRequest
         {
-            Contents = fileContents,
+            Contents = fileContents.ToList(),
             ContentType = "image/jpeg",
             Description = string.Concat(Enumerable.Repeat("abc", 1000))
         };
@@ -118,7 +118,7 @@ public class UploadPhotoTests : IDisposable
 
         var request = new UploadPhotoRequest
         {
-            Contents = contents,
+            Contents = contents.ToList(),
             ContentType = "image/jpeg",
             Description = "test"
         };

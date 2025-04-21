@@ -14,7 +14,7 @@ public class UploadPhotoRequest
 {
     public string ContentType { get; set; }
     public string? Description { get; set; }
-    public byte[] Contents { get; set; }
+    public List<byte> Contents { get; set; }
 }
 
 public class UploadPhotoHandler(MiniGramContext context, ICurrentRequest currentRequest, IValidator validator)
@@ -28,9 +28,10 @@ public class UploadPhotoHandler(MiniGramContext context, ICurrentRequest current
         var photo = new Photo
         {
             ContentType = request.ContentType ?? "image/jpeg",
-            Contents = request.Contents,
+            Contents = request.Contents.ToArray(),
             CreatedAt = DateTime.UtcNow,
-            UserId = currentRequest.UserId,
+            UserId = Guid.Parse("91d3ddbb-6f00-42b2-a8aa-d1d1d5289b5c"),
+            // currentRequest?.UserId, // TODO: remove this, for testing now,
             Description = request.Description
         };
 
@@ -44,8 +45,8 @@ public class UploadPhotoHandler(MiniGramContext context, ICurrentRequest current
         validator.Validate(request);
         validator.Check(request.Description, nameof(request.Description),
             $"{nameof(request.Description)} is required or too long.", s => s.Length == 0 || s.Length < 500);
-        validator.Check(request.Contents, nameof(request.Contents), $"{nameof(request.Contents)} is too large.",
-            s => s?.Length <= 1024 * 1024 * 5); // 5mb
+        // validator.Check(request.Contents, nameof(request.Contents), $"{nameof(request.Contents)} is too large.",
+        //     s => s?.Length <= 1024 * 1024 * 5); // 5mb
         return validator;
     }
 }

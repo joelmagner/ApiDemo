@@ -44,12 +44,17 @@ public class LoginHandler(
             httpContextAccessor.HttpContext?.Response.Cookies.Append("access_token", accessToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true, // (via HTTPS)
+                Secure = false, // flip
                 SameSite = SameSiteMode.Lax,
                 IsEssential = true,
                 Expires = DateTimeOffset.UtcNow.AddHours(1)
             });
-            return Results.Ok(new { Message = $"Successfully logged in as {user.FirstName} {user.LastName}!" });
+
+            return Results.Ok(new
+            {
+                Access_token = accessToken, // have to use this... urgh
+                Message = $"Successfully logged in as {user.FirstName} {user.LastName}!"
+            });
         }
 
         return Results.BadRequest(new { Message = "Incorrect username / password" });

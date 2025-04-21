@@ -1,0 +1,74 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
+    <h2 class="text-center text-3xl font-semibold text-gray-700">Login</h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="form" class="space-y-6">
+      <!-- Error Message -->
+      <div *ngIf="errorMessage()" class="text-red-500 text-center">
+        {{ errorMessage() }}
+      </div>
+
+      <!-- Identifier (username/email) -->
+      <div class="flex flex-col">
+        <label for="identifier" class="text-sm font-medium text-gray-600"
+          >Username or Email</label
+        >
+        <input
+          id="identifier"
+          type="text"
+          formControlName="identifier"
+          class="mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [class.border-red-500]="
+            form.get('identifier')?.invalid && form.get('identifier')?.touched
+          "
+        />
+        <div
+          *ngIf="
+            form.get('identifier')?.invalid && form.get('identifier')?.touched
+          "
+          class="text-red-500 text-xs"
+        >
+          Username or email is required.
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="flex flex-col">
+        <label for="password" class="text-sm font-medium text-gray-600"
+          >Password</label
+        >
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [class.border-red-500]="
+            form.get('password')?.invalid && form.get('password')?.touched
+          "
+        />
+        <div
+          *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+          class="text-red-500 text-xs"
+        >
+          Password is required.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="submitting()"
+        class="w-full py-3 mt-4 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+      >
+        <span *ngIf="submitting()">Logging in...</span>
+        <span *ngIf="!submitting()">Login</span>
+      </button>
+    </form>
+
+    <div class="text-center">
+      <p class="text-sm text-gray-600">
+        Don't have an account?
+        <a href="/register" class="text-blue-500 hover:underline">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>

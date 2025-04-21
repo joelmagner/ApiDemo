@@ -1,0 +1,157 @@
+<div class="flex items-center justify-center h-screen bg-gray-100">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-xl">
+    <h2 class="text-center text-3xl font-semibold text-gray-800">
+      Create Account
+    </h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="form" class="space-y-5">
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="text-red-500 text-center text-sm">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Username -->
+      <div>
+        <label for="username" class="block text-sm text-gray-600 mb-1"
+          >Username</label
+        >
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          class="w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder:text-sm placeholder:text-gray-400"
+          placeholder="yourusername"
+        />
+        <div
+          *ngIf="form.get('username')?.touched && form.get('username')?.invalid"
+          class="text-red-500 text-sm"
+        >
+          <div *ngIf="form.get('username')?.hasError('required')">
+            Username is required.
+          </div>
+          <div *ngIf="form.get('username')?.hasError('minlength')">
+            Username must be at least 2 characters long.
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm text-gray-600 mb-1"
+          >Email</label
+        >
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder:text-sm placeholder:text-gray-400"
+          placeholder="you@example.com"
+        />
+        <div
+          *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
+          class="text-red-500 text-sm"
+        >
+          <div *ngIf="form.get('email')?.hasError('required')">
+            Email is required.
+          </div>
+          <div *ngIf="form.get('email')?.hasError('email')">
+            Please enter a valid email address.
+          </div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-sm text-gray-600 mb-1"
+          >Password</label
+        >
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder:text-sm placeholder:text-gray-400"
+          placeholder="••••••••"
+        />
+        <div
+          *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
+          class="text-red-500 text-sm"
+        >
+          <div *ngIf="form.get('password')?.hasError('required')">
+            Password is required.
+          </div>
+          <div *ngIf="form.get('password')?.hasError('minlength')">
+            Password must be at least 6 characters long.
+          </div>
+        </div>
+      </div>
+
+      <!-- First & Last Name -->
+      <div class="flex gap-4">
+        <div class="w-1/2">
+          <label for="firstName" class="block text-sm text-gray-600 mb-1"
+            >First Name</label
+          >
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            class="w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder:text-sm placeholder:text-gray-400"
+            placeholder="John"
+          />
+          <div
+            *ngIf="
+              form.get('firstName')?.touched && form.get('firstName')?.invalid
+            "
+            class="text-red-500 text-sm"
+          >
+            <div *ngIf="form.get('firstName')?.hasError('required')">
+              First Name is required.
+            </div>
+            <div *ngIf="form.get('firstName')?.hasError('minlength')">
+              First Name must be at least 2 characters long.
+            </div>
+          </div>
+        </div>
+        <div class="w-1/2">
+          <label for="lastName" class="block text-sm text-gray-600 mb-1"
+            >Last Name</label
+          >
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            class="w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder:text-sm placeholder:text-gray-400"
+            placeholder="Doe"
+          />
+          <div
+            *ngIf="
+              form.get('lastName')?.touched && form.get('lastName')?.invalid
+            "
+            class="text-red-500 text-sm"
+          >
+            <div *ngIf="form.get('lastName')?.hasError('required')">
+              Last Name is required.
+            </div>
+            <div *ngIf="form.get('lastName')?.hasError('minlength')">
+              Last Name must be at least 2 characters long.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="submitting || form.invalid"
+        class="w-full py-3 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition"
+      >
+        <span *ngIf="submitting">Registering...</span>
+        <span *ngIf="!submitting">Register</span>
+      </button>
+    </form>
+
+    <div class="text-center text-sm text-gray-600 pt-2">
+      Already have an account?
+      <a routerLink="/login" class="text-blue-600 hover:underline">Log in</a>
+    </div>
+  </div>
+</div>

@@ -26,10 +26,10 @@ public static class ServiceCollectionExtensions
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://localhost:7223")
+                policy.WithOrigins("http://localhost:4200") // Assuming Angular runs on this port.
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials();
+                    .AllowCredentials(); // Allows credentials (cookies, authorization headers, etc.)
             });
         });
 
@@ -48,6 +48,7 @@ public static class ServiceCollectionExtensions
 
         // handlers
         services.AddScoped<ICreateUserHandler, CreateUserHandler>();
+        services.AddScoped<IMeHandler, MeHandler>();
         services.AddScoped<IGetUserByUsernameHandler, GetUserByUsernameHandler>();
         services.AddScoped<IGetUserPhotosHandler, GetUserPhotosHandlerHandler>();
         services.AddScoped<ILoginHandler, LoginHandler>();
