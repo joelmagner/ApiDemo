@@ -19,8 +19,8 @@ namespace MiniGram.Tests;
 
 public class ClientTestWebAppFactory : WebApplicationFactory<Program>
 {
-    readonly ClaimsIdentityOptions Claims = new();
-    readonly MiniGramMemoryDb Db = new();
+    public readonly ClaimsIdentityOptions Claims = new();
+    public readonly MiniGramMemoryDb Db = new();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -46,7 +46,6 @@ public class ClientTestWebAppFactory : WebApplicationFactory<Program>
                 var dbContext = services.SingleOrDefault(
                     d => d.ServiceType == typeof(DbContextOptions<MiniGramContext>));
                 services.Remove(dbContext);
-
                 services.AddDbContext<MiniGramContext>(o => { o.UseSqlite(Db.Connection); });
                 services.AddSingleton(options.Object);
                 var serviceProvider = services.BuildServiceProvider();
@@ -72,15 +71,17 @@ public class MiniGramMemoryDb
     }
 
     public SqliteConnection Connection { get; }
+    public MiniGramContext Context { get; private set; }
 
     public void InitializeDatabase(IServiceProvider serviceProvider)
     {
         var dbContext = serviceProvider.GetRequiredService<MiniGramContext>();
 
         dbContext.Database.OpenConnection();
-        dbContext.Database.ExecuteSqlRaw("PRAGMA foreign_keys = ON;"); // needed - don't remove.
+        dbContext.Database.ExecuteSqlRaw("PRAGMA foreign_keys = ON;");
 
         dbContext.Database.EnsureCreated();
+        Context = dbContext;
 
         // Seed some initial data
         var user = new User

@@ -50,6 +50,15 @@ public static class RouteExtensions
             .Produces<Ok>()
             .Produces<UnauthorizedResult>(StatusCodes.Status401Unauthorized)
             .Produces<BadRequest>(StatusCodes.Status400BadRequest);
+
+        route.MapGet("/photos/{userId:guid}", async (
+                    Guid userId,
+                    IGetUserPhotosHandler handler,
+                    CancellationToken cancellationToken) =>
+                await handler.Handle(userId, cancellationToken))
+            .Produces<Ok>()
+            .Produces<UnauthorizedResult>(StatusCodes.Status401Unauthorized)
+            .Produces<BadRequest>(StatusCodes.Status400BadRequest);
     }
 
     static void UploadRoutes(this RouteGroupBuilder route)

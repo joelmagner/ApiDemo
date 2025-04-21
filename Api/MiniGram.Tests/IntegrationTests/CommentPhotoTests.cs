@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,27 +14,34 @@ using Xunit;
 
 namespace MiniGram.Tests.IntegrationTests;
 
-public class CommentPhotoTests
+public class CommentPhotoTests : IDisposable
 {
     readonly WebApplicationFactory<Program> _app;
-    readonly ClientTestWebAppFactory _factory = new();
-    readonly Mock<IMiniGramClient> _mockClient = new();
     readonly IMiniGramClient _client;
     readonly Mock<ICurrentRequest> _currentRequest = new();
+    readonly ClientTestWebAppFactory _factory = new();
+    readonly Mock<IMiniGramClient> _mockClient = new(MockBehavior.Strict);
 
     public CommentPhotoTests()
     {
         _currentRequest.Setup(x => x.UserId).Returns(TestHelper.GetTestUserId);
-        _client = _factory.WithWebHostBuilder(builder =>
+        _app = _factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureServices(services =>
             {
                 services.AddSingleton(_mockClient.Object);
                 services.AddSingleton(_currentRequest.Object);
             });
-        }).CreateServiceClient<MiniGramClient>();
+        });
+
+        _client = _app.CreateServiceClient<MiniGramClient>();
     }
 
+    public void Dispose()
+    {
+        _factory?.Dispose();
+        _app?.Dispose();
+    }
 
     [Fact]
     public async Task Should_add_comment_to_photo()
@@ -42,13 +50,14 @@ public class CommentPhotoTests
         var comment = new Comment
         {
             PhotoId = photoId,
-            Text = "testkommentar",
+            Text = "testkommentar"
         };
 
         _mockClient.Setup(x => x.CommentPhoto(It.IsAny<CommentPhotoRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ApiSuccessResponse<Comment>(comment, 201));
 
-        var response = await _client.CommentPhoto(new CommentPhotoRequest { PhotoId = photoId, Comment = "testkommentar" });
+        var response = await _client.CommentPhoto(new CommentPhotoRequest
+            { PhotoId = photoId, Comment = "testkommentar" });
 
         Assert.NotNull(response);
         Assert.True(response.IsSuccess);
@@ -75,7 +84,7 @@ public class CommentPhotoTests
         Assert.False(response.IsSuccess);
         Assert.Equal((int)HttpStatusCode.BadRequest, response.HttpStatus);
 
-        var error = System.Text.Json.JsonSerializer.Deserialize<ValidationProblemDetails>(response.Error);
+        var error = JsonSerializer.Deserialize<ValidationProblemDetails>(response.Error);
         Assert.Equal("Comment is too long.", error.Errors["Comment"].FirstOrDefault());
     }
 }

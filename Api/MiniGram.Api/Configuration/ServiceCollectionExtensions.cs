@@ -49,6 +49,7 @@ public static class ServiceCollectionExtensions
         // handlers
         services.AddScoped<ICreateUserHandler, CreateUserHandler>();
         services.AddScoped<IGetUserByUsernameHandler, GetUserByUsernameHandler>();
+        services.AddScoped<IGetUserPhotosHandler, GetUserPhotosHandlerHandler>();
         services.AddScoped<ILoginHandler, LoginHandler>();
         services.AddScoped<ILogoutHandler, LogoutHandler>();
         services.AddScoped<ICommentPhotoHandler, CommentPhotoHandler>();
@@ -63,7 +64,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<JwtConfig>(sp =>
             sp.GetRequiredService<IOptions<JwtConfig>>().Value);
-        
+
 
         services.AddAuthentication(options =>
             {
@@ -79,16 +80,13 @@ public static class ServiceCollectionExtensions
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-                
+
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
                     {
                         var token = context.Request.Cookies["access_token"];
-                        if (!string.IsNullOrEmpty(token))
-                        {
-                            context.Token = token;
-                        }
+                        if (!string.IsNullOrEmpty(token)) context.Token = token;
 
                         return Task.CompletedTask;
                     }
