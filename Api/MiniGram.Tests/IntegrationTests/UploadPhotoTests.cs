@@ -43,7 +43,6 @@ public class UploadPhotoTests : IDisposable
         _app?.Dispose();
     }
 
-
     [Fact]
     public async Task Should_upload_image_from_byte_stream()
     {
@@ -95,7 +94,7 @@ public class UploadPhotoTests : IDisposable
         };
 
         _mockClient.Setup(x => x.UploadPhoto(request, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ApiSuccessResponse<Photo>(inDb, 201));
+            .ReturnsAsync(new ApiErrorResponse<Photo>(inDb, 201));
 
         var response = await _client.UploadPhoto(request);
 
@@ -131,7 +130,7 @@ public class UploadPhotoTests : IDisposable
         };
 
         _mockClient.Setup(x => x.UploadPhoto(request, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ApiSuccessResponse<Photo>(inDb, 201));
+            .ReturnsAsync(new ApiErrorResponse<Photo>(inDb, 201));
 
         var response = await _client.UploadPhoto(request);
 

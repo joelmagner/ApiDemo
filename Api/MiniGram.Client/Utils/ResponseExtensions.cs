@@ -32,9 +32,10 @@ public static class ResponseExtensions
 }
 
 public class ApiSuccessResponse<T>(T item, int httpStatus) : Response<T>(item, httpStatus);
-
-public class ApiErrorResponse<T>(string error, int httpStatus) : Response<T>(error, httpStatus);
-
 public class ApiSuccessResponse(string data, int statusCode) : Response(data, statusCode);
-
 public class ApiErrorResponse(string error, int statusCode) : Response(error, statusCode);
+public class ApiErrorResponse<T> : Response<T>
+{
+    public ApiErrorResponse(string error, int httpStatus) : base(error, httpStatus) { }
+    public ApiErrorResponse(T errorDetails, int httpStatus) : base(errorDetails, httpStatus) { }
+}

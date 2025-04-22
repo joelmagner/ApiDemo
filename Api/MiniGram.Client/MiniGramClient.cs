@@ -12,12 +12,8 @@ public interface IMiniGramClient
     Task<Response<LoginResponse>> Login(LoginRequest request, CancellationToken cancellationToken = default);
     Task<Response<string>> Logout(LogoutRequest request, CancellationToken cancellationToken = default);
     Task<Response<User>> CreateUser(CreateUserRequest request, CancellationToken cancellationToken = default);
-
-    Task<Response<User>> GetUserByUsername(GetUserByUsernameRequest request,
-        CancellationToken cancellationToken = default);
-
+    Task<Response<User>> GetUserByUsername(GetUserByUsernameRequest request, CancellationToken cancellationToken = default);
     Task<Response<Photo[]>> GetUserPhotos(Guid userId, CancellationToken cancellationToken = default);
-
     Task<Response<Photo>> UploadPhoto(UploadPhotoRequest request, CancellationToken cancellationToken = default);
     Task<Response> CommentPhoto(CommentPhotoRequest request, CancellationToken cancellationToken = default);
 }

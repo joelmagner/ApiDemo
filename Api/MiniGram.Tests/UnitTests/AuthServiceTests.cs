@@ -13,7 +13,6 @@ public class AuthServiceTests
     [Fact]
     public void Should_serialize_and_deserialize_credentials()
     {
-        // Arrange
         var credentials = new Credentials
         {
             UserId = Guid.NewGuid(),
@@ -21,10 +20,8 @@ public class AuthServiceTests
             Created = DateTime.UtcNow
         };
 
-        // Act
         var hashedPassword = _authService.HashPassword(credentials.Password);
 
-        // Assert
         Assert.NotNull(hashedPassword);
         Assert.False(_authService.CheckPassword(credentials.Password + "NotActualPassword", hashedPassword));
         Assert.True(_authService.CheckPassword(credentials.Password, hashedPassword));

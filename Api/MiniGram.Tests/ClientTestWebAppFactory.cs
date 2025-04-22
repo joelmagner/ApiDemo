@@ -19,42 +19,43 @@ namespace MiniGram.Tests;
 
 public class ClientTestWebAppFactory : WebApplicationFactory<Program>
 {
-    public readonly ClaimsIdentityOptions Claims = new();
-    public readonly MiniGramMemoryDb Db = new();
+    public ClaimsIdentityOptions Claims { get; } = new();
+    public MiniGramMemoryDb Db { get; } = new();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        var options = new Mock<IOptions<AppSettings>>();
-        options
-            .SetupGet(x => x.Value)
-            .Returns(new AppSettings());
+        var mockAppSettings = new Mock<IOptions<AppSettings>>();
+        mockAppSettings.SetupGet(x => x.Value).Returns(new AppSettings());
 
-        var projectDir = Directory.GetCurrentDirectory();
-        var configPath = Path.Combine(projectDir, "appsettings.json");
-
+        var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
         builder.UseConfiguration(new ConfigurationBuilder().AddJsonFile(configPath).Build());
 
-        builder
-            .ConfigureServices(services =>
-            {
-                services.AddSingleton(Claims);
-                var optionsConfig = services.Where(r =>
-                    r.ServiceType.IsGenericType && r.ServiceType.GetGenericTypeDefinition() ==
-                    typeof(IDbContextOptionsConfiguration<>)).ToArray();
-                foreach (var option in optionsConfig) services.Remove(option);
+        builder.ConfigureServices(services =>
+        {
+            var optionsConfigs = services
+                .Where(r => r.ServiceType.IsGenericType &&
+                            r.ServiceType.GetGenericTypeDefinition() == typeof(IDbContextOptionsConfiguration<>))
+                .ToArray();
+            foreach (var config in optionsConfigs)
+                services.Remove(config);
 
-                var dbContext = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<MiniGramContext>));
+            var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MiniGramContext>));
+            if (dbContext is not null)
                 services.Remove(dbContext);
-                services.AddDbContext<MiniGramContext>(o => { o.UseSqlite(Db.Connection); });
-                services.AddSingleton(options.Object);
-                var serviceProvider = services.BuildServiceProvider();
-                Db.InitializeDatabase(serviceProvider);
-            })
-            .ConfigureTestServices(services =>
-            {
-                //TODO: add actual test auth here?
-            });
+
+            services.AddDbContext<MiniGramContext>(o => o.UseSqlite(Db.Connection));
+            services.AddSingleton(mockAppSettings.Object);
+            services.AddSingleton(Claims);
+
+
+            var provider = services.BuildServiceProvider();
+            Db.InitializeDatabase(provider);
+        });
+
+        builder.ConfigureTestServices(services =>
+        {
+            // TODO: Add test auth setup here
+        });
 
         builder.UseEnvironment("Development");
     }
@@ -79,8 +80,8 @@ public class MiniGramMemoryDb
 
         dbContext.Database.OpenConnection();
         dbContext.Database.ExecuteSqlRaw("PRAGMA foreign_keys = ON;");
-
         dbContext.Database.EnsureCreated();
+
         Context = dbContext;
 
         // Seed some initial data
@@ -111,10 +112,10 @@ public class MiniGramMemoryDb
 public static class WebApplicationFactoryExtensions
 {
     public static T CreateServiceClient<T>(this WebApplicationFactory<Program> factory,
-        params DelegatingHandler[] delegatingHandlers)
+        params DelegatingHandler[] handlers)
     {
-        var httpClient = factory.CreateDefaultClient(delegatingHandlers);
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("TestScheme");
-        return (T)Activator.CreateInstance(typeof(T), httpClient);
+        var client = factory.CreateDefaultClient(handlers);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("TestScheme");
+        return (T)Activator.CreateInstance(typeof(T), client)!;
     }
 }

@@ -76,7 +76,7 @@ public class CommentPhotoTests : IDisposable
         };
 
         _mockClient.Setup(x => x.CommentPhoto(It.IsAny<CommentPhotoRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ApiSuccessResponse<Comment>(comment, 201));
+            .ReturnsAsync(new ApiErrorResponse<Comment>(comment, 400));
 
         var response = await _client.CommentPhoto(new CommentPhotoRequest { PhotoId = photoId, Comment = fakeComment });
 

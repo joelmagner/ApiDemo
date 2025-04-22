@@ -1,45 +1,87 @@
 # ApiDemo
 
-Example Api to demonstrate EF, .NET, Auth etc. TBD... what exactly this is gonna be. Probably a bad file upload clone
+#### A work-in-progress example application
 
-#### things not implemented as of now:
+### What’s Working
 
-- Refresh token
-- Auth not enforced as it should everywhere in order for me to create some tests.
-- https://github.com/scalar/scalar/issues/3701 (Authorization header is acting strange, hard to verify)
+- Login flow
+- File upload
+- Integration tests
+- `[Authorize]` attributes (currently disabled in places for testing)
+- Shared client package for communication between backend services
 
-#### what is working?:
+---
 
-- login flow
-- file upload
-- integration tests
-- Authorize\* (it is working, disabled because I needed to do some tests)
-- Client package, probably needs a rework with the return Response types
+### Not Yet Implemented
 
-# Setup
+- Refresh token flow
+- Full authentication enforcement (partially disabled to facilitate testing)
+- Logout flow
+- [scalar#3701](https://github.com/scalar/scalar/issues/3701): Authorization header behaves inconsistently, making it hard to verify
 
-Start your SQL-server.
+---
 
-(on Mac)
+## Setup
+
+Make sure Docker and the .NET SDK are installed.
+
+start an SQL-server instance, (i use):
+
+```bash
+docker run -e "ACCEPT_EULA=Y" \
+  -e "MSSQL_SA_PASSWORD=MyPass@word" \
+  -e "MSSQL_PID=Developer" \
+  -e "MSSQL_USER=SA" \
+  -p 1433:1433 \
+  -d --name=sqldb \
+  mcr.microsoft.com/azure-sql-edge
+```
+
+### Database Setup
+
+Navigate to the API project folder and apply migrations:
+
+```bash
+cd MiniGram.Api
+dotnet ef database update
+```
+
+### Running the API
+
+Start the project and navigate to:
 
 ```
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=MyPass@word" -e "MSSQL_PID=Developer" -e "MSSQL_USER=SA" -p 1433:1433 -d --name=sqldb mcr.microsoft.com/azure-sql-edge
+https://localhost:5259/scalar/
 ```
 
-Navigate into the **MiniGram.Api** folder.
+You can now test the API using Scalar or the frontend.
 
-`dotnet ef database update`
+---
 
-Then start the project and navigate to `https://localhost:5259/scalar/` and make some requests.
+## Frontend
 
-or start the frontend with:
+To start the Angular frontend:
 
-`ng serve` and navigate to http://localhost:4200 and create an account.
+```bash
+ng serve
+```
 
-GIF demo:
+Then open:
+
+```
+http://localhost:4200
+```
+
+Register a new account and test file uploads.
+
+---
+
+## Demo
+
+### General Usage
 
 ![](./demo.gif)
 
-Register:
+### Registration Flow
 
 ![](./register.gif)

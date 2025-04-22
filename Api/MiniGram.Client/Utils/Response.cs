@@ -16,7 +16,6 @@ public abstract class Response<T> : Response
         HttpStatus = httpStatus;
     }
 
-
     public T Item { get; init; } = default!;
 }
 
