@@ -78,17 +78,31 @@ public static class ServiceCollectionExtensions
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["Jwt:Audience"]
                 };
+
 
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
                     {
-                        var token = context.Request.Cookies["access_token"];
+                        var token = context.Request.Headers.Authorization
+                            .FirstOrDefault()?.Split(" ").Last();
                         if (!string.IsNullOrEmpty(token)) context.Token = token;
 
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"JWT Auth failed: {context.Exception.Message}");
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine($"JWT Auth failed: {context.Result}");
                         return Task.CompletedTask;
                     }
                 };

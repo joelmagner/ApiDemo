@@ -1,12 +1,4 @@
-import {
-  EnvironmentInjector,
-  inject,
-  Injectable,
-  runInInjectionContext,
-  signal,
-} from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, firstValueFrom } from 'rxjs';
+import { EnvironmentInjector, inject, Injectable, signal } from '@angular/core';
 import { Api } from './api.service';
 import { MeResponse } from './api/user.dto';
 
@@ -24,22 +16,15 @@ export class UserService {
     return this._currentUser;
   }
 
-  fetchCurrentUser() {
+  async fetchCurrentUser() {
     const isLoggedIn = localStorage.getItem('access_token');
-    if (!isLoggedIn) return;
-    this.api.auth.getMe().subscribe({
-      next: (user) => this._currentUser.set(user),
-      error: () => this._currentUser.set(null),
-    });
-  }
-
-  waitForUser(): Promise<MeResponse> {
-    return runInInjectionContext(this.injector, () =>
-      firstValueFrom(
-        toObservable(this._currentUser).pipe(
-          filter((user): user is MeResponse => user !== null)
-        )
-      )
-    );
+    if (!isLoggedIn || this._currentUser()?.userId) return;
+    try {
+      const user = await this.api.auth.getMe();
+      this._currentUser.set(user);
+    } catch (e) {
+      this._currentUser.set(null);
+      localStorage.clear();
+    }
   }
 }

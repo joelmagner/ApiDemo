@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MiniGram.Api;
 using MiniGram.Api.Common;
-using MiniGram.Api.Handlers;
 using MiniGram.Api.Storage.Entities;
 using MiniGram.Client;
 using MiniGram.Client.Utils;
+using MiniGram.Contracts.Models;
 using Moq;
 using Xunit;
 

@@ -29,8 +29,7 @@ public class JwtService(JwtConfig? config) : IJwtService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.GivenName, firstName),
-            new Claim(ClaimTypes.Surname, lastName),
-            new Claim("UserId", userId.ToString()) // Custom claim for user ID
+            new Claim(ClaimTypes.Surname, lastName)
         };
 
         var creds = new SigningCredentials(

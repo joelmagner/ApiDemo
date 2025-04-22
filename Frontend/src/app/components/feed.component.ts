@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Api } from '../services/api.service';
-import { MeResponse, Photo } from '../services/api/user.dto';
+import { Photo } from '../services/api/user.dto';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -20,12 +20,11 @@ export class FeedComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  currentUser: MeResponse | null = null;
   activePhotoId: string | null = null;
 
   async ngOnInit() {
     try {
-      this.currentUser = await this.userService.waitForUser();
+      await this.userService.fetchCurrentUser();
       await this.fetchPhotos();
     } catch (err) {
       console.log(err);
@@ -36,15 +35,15 @@ export class FeedComponent implements OnInit {
   }
 
   async fetchPhotos() {
-    if (!this.currentUser) return;
-    this.api.user.getPhotos(this.currentUser.userId).subscribe({
-      next: (data) => {
-        this.photos = data;
-      },
-      error: () => {
-        this.error = 'Failed to load photos.';
-      },
-    });
+    if (!this.userService.currentUser()) return;
+    try {
+      this.photos = await this.api.user.getPhotos(
+        this.userService.currentUser()?.userId!
+      );
+    } catch (e) {
+      this.error = 'Could not get photos';
+      console.log('Error fetching photos', e);
+    }
   }
 
   openContextMenu(photoId: string) {
@@ -55,26 +54,20 @@ export class FeedComponent implements OnInit {
     this.activePhotoId = null;
   }
 
-  deletePhoto(photoId: string) {
-    this.api.user.deletePhoto(photoId).subscribe({
-      next: () => {
-        this.photos = this.photos.filter((photo) => photo.id !== photoId);
-      },
-      error: () => {
-        this.error = 'Failed to delete photo';
-      },
-    });
+  async deletePhoto(photoId: string) {
+    try {
+      await this.api.user.deletePhoto(photoId);
+    } catch (e) {
+      this.error = 'Could not delete photo';
+    }
   }
 
-  editPhoto(photoId: string) {
-    this.api.user.editPhoto(photoId).subscribe({
-      next: () => {
-        this.photos = this.photos.filter((photo) => photo.id !== photoId);
-      },
-      error: () => {
-        this.error = 'Failed to edit photo details';
-      },
-    });
+  async editPhoto(photoId: string) {
+    try {
+      await this.api.user.editPhoto(photoId);
+    } catch (e) {
+      this.error = 'Failed to edit photo details';
+    }
   }
 
   likePhoto(photoId: string) {

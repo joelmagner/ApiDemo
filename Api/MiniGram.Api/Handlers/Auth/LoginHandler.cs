@@ -39,20 +39,11 @@ public class LoginHandler(
         if (authService.CheckPassword(request.Password, credentials.Password))
         {
             var accessToken = jwt.GenerateToken(user.UserId, user.Email, user.Username, user.FirstName, user.LastName);
-            httpContextAccessor.HttpContext?.Response.Headers.Add("Authorization",
-                $"Bearer {accessToken}"); // Bug in Scalar right now, doesn't work.
-            httpContextAccessor.HttpContext?.Response.Cookies.Append("access_token", accessToken, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = false, // flip
-                SameSite = SameSiteMode.Lax,
-                IsEssential = true,
-                Expires = DateTimeOffset.UtcNow.AddHours(1)
-            });
+            httpContextAccessor.HttpContext?.Response.Headers.Add("Authorization", $"Bearer {accessToken}");
 
             return Results.Ok(new
             {
-                Access_token = accessToken, // have to use this... urgh
+                Access_token = accessToken,
                 Message = $"Successfully logged in as {user.FirstName} {user.LastName}!"
             });
         }

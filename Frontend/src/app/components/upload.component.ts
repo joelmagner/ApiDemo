@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, signal } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Api } from '../services/api.service';
 import { UploadPhotoRequest } from '../services/api/auth.dto';
@@ -12,17 +17,20 @@ import { UploadPhotoRequest } from '../services/api/auth.dto';
   templateUrl: './upload.component.html',
 })
 export class UploadComponent {
-  private fb = inject(FormBuilder);
-  private api = inject(Api);
-  private router = inject(Router);
-
-  readonly form = this.fb.group({
-    image: [null as File | null, Validators.required],
-    comment: ['', Validators.required],
-  });
-
+  form: FormGroup;
   previewUrl = signal<string | null>(null);
   submitting = signal(false);
+
+  constructor(
+    private fb: FormBuilder,
+    private api: Api,
+    private router: Router
+  ) {
+    this.form = this.fb.group({
+      image: [null as File | null, Validators.required],
+      comment: ['', Validators.required],
+    });
+  }
 
   onFileChange(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -52,10 +60,13 @@ export class UploadComponent {
       description: comment,
     };
 
-    this.api.upload.photos(payload).subscribe({
-      next: () => this.router.navigate(['/feed']),
-      error: () => alert('Upload failed.'),
-      complete: () => this.submitting.set(false),
-    });
+    try {
+      await this.api.upload.photos(payload);
+      this.router.navigate(['/feed']);
+    } catch (e) {
+      alert('Upload failed.');
+    } finally {
+      this.submitting.set(false);
+    }
   }
 }

@@ -20,7 +20,7 @@ public class MeHandler(MiniGramContext context, ICurrentRequest currentRequest) 
 {
     public async Task<IResult> Handle(CancellationToken cancellationToken = default)
     {
-        if (currentRequest?.UserId == null || currentRequest.UserId == default) return Results.Forbid();
+        if (currentRequest.UserId == default) return Results.Forbid();
 
         var user = await context.Users.FindAsync([currentRequest.UserId], cancellationToken);
         if (user == null) return Results.NotFound($"No user with id: {currentRequest.UserId} could be found");

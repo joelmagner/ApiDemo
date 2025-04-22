@@ -5,10 +5,12 @@
 ### What’s Working
 
 - Login flow
+- Registration flow
 - File upload
+- Validation
 - Integration tests
 - `[Authorize]` attributes (currently disabled in places for testing)
-- Shared client package for communication between backend services
+- Shared client package for communication between backend services and integration testing
 
 ---
 
@@ -17,7 +19,6 @@
 - Refresh token flow
 - Full authentication enforcement (partially disabled to facilitate testing)
 - Logout flow
-- [scalar#3701](https://github.com/scalar/scalar/issues/3701): Authorization header behaves inconsistently, making it hard to verify
 
 ---
 

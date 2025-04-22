@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
 import { UploadPhotoRequest } from './auth.dto';
 import { BaseApi } from './base.api';
 
@@ -12,8 +11,6 @@ export class UploadRoutes extends BaseApi {
   }
 
   photos(payload: UploadPhotoRequest) {
-    return this.post<UploadPhotoRequest>('/photo', payload).pipe(
-      map((res) => res ?? null)
-    );
+    return this.post<UploadPhotoRequest>('/photo', payload);
   }
 }
